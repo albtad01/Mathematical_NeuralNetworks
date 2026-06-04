@@ -1,7 +1,7 @@
 """
 Replication of escape phenomenon (Zhu et al. 2019, Figure 3).
 
-GD converges to a sharp minimum (θ*_GD) with ~100 % training accuracy
+GD converges to a sharp minimum (theta*_GD) with ~100 % training accuracy
 (memorising corrupted labels).  SGD, initialised at θ*_GD, escapes that
 sharp minimum and settles at a flatter one with better test accuracy.
 
@@ -12,11 +12,11 @@ Setup (Zhu et al. 2019, Section 5.3)
               +  200 samples with random labels
               = 1 200 training samples total
   Network : LeNet-like, ~11 244 parameters
-              Conv2d(1→4, 5×5, pad=2) → ReLU → MaxPool(2)
-              → Linear(784→14) → ReLU → Linear(14→10)
+              Conv2d(1->4, 5x5, pad=2) -> ReLU -> MaxPool(2)
+              → Linear(784->14) -> ReLU -> Linear(14->10)
   Loss    : cross-entropy
-  LR      : η = 0.07  (same constant for both GD and SGD)
-  GD iters: 3 000  (to reach θ*_GD near a global minimum)
+  LR      : nu = 0.07  (same constant for both GD and SGD)
+  GD iters: 3 000  (to reach theta*_GD near a global minimum)
   SGD batch: m = 20
   Total iters plotted: 14 000
 
@@ -102,10 +102,10 @@ y_te = torch.tensor(y_te_np, dtype=torch.long, device=DEVICE)
 # ── model ─────────────────────────────────────────────────────────────────────
 class LeNetSmall(nn.Module):
     """
-    LeNet-like network for FashionMNIST (1×28×28 → 10 classes).
-    Parameter count: 104 + 10 990 + 150 = 11 244  ≈ 11 330 (Zhu et al.).
-      Conv2d(1, 4, 5, padding=2) → ReLU → MaxPool(2)  # 4×14×14 = 784 features
-      Linear(784, 14) → ReLU → Linear(14, 10)
+    LeNet-like network for FashionMNIST (1x28x28 -> 10 classes).
+    Parameter count: 104 + 10 990 + 150 = 11 244 near 11 330 (Zhu et al.).
+      Conv2d(1, 4, 5, padding=2) -> ReLU -> MaxPool(2)  # 4x14x14 = 784 features
+      Linear(784, 14) -> ReLU -> Linear(14, 10)
     """
     def __init__(self):
         super().__init__()
@@ -207,7 +207,7 @@ else:
     torch.save(net_sw.state_dict(), GD_SWITCH_FILE)
     print(f"  Saved {GD_LOGS_FILE} and {GD_SWITCH_FILE}")
 
-# ── Run 2: SGD phase initialised from θ*_GD ───────────────────────────────────
+# ── Run 2: SGD phase initialised from theta*_GD ───────────────────────────────────
 print(f"\n=== Run 2 (SGD phase): lr={LR}  batch={SGD_BATCH} ===")
 net_sgd = LeNetSmall().to(DEVICE)
 net_sgd.load_state_dict(
@@ -271,7 +271,7 @@ for ax, gd_y, sgd_y, ylabel in [
         (ax1, tr_gd, tr_sgd, 'Train Accuracy (%)'),
         (ax2, te_gd, te_sgd, 'Test Accuracy (%)')]:
 
-    # raw GD curve (full-batch → no noise, no smoothing needed)
+    # raw GD curve (full-batch -> no noise, no smoothing needed)
     ax.plot(iters_gd, gd_y, 'b--', linewidth=1.5, label='GD', alpha=0.9)
 
     # SGD: faint raw trace + bold smoothed trend

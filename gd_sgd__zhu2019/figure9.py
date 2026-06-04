@@ -6,17 +6,17 @@ applied to a VGG-type network for FashionMNIST.
 
 Definitions  (Section 5.5, E et al. 2020 — 1-D toy model, extended to multi-D)
 -----------
-  Sharpness     a = (1/n) Σᵢ aᵢ  =  λ_max(∇²L)
+  Sharpness     a = (1/n) sum_i a_i  =  lambda_max(nabla^2*L)
                   largest Hessian eigenvalue, estimated via power iteration.
                   At stability boundary for GD: a = 2/η.
 
-  Non-uniformity s = sqrt( (1/n) Σᵢ aᵢ² − a² )
-                  std of per-sample curvatures aᵢ = vᵀ ∇²Lᵢ(θ) v,
-                  where v is the leading eigenvector of ∇²L.
+  Non-uniformity s = sqrt( (1/n) sum_i a_i^2 - a^2 )
+                  std of per-sample curvatures a_i = v^T nabla^2 L_i(θ) v,
+                  where v is the leading eigenvector of nabla^2 L.
 
 Theory predicts that SGD with batch B selects minima satisfying
-  s ≤ C · √B
-and GD (full batch) clusters near the stability boundary a = 2/η.
+  s <= C · sqrt(B)
+and GD (full batch) clusters near the stability boundary a = 2/nu.
 """
 
 import numpy as np
@@ -47,7 +47,7 @@ BATCH_SIZES  = [None, 25, 10, 4]  # None = full-batch GD
 N_SEEDS      = 8       # independent runs per configuration
 MAX_EPOCHS   = 1500    # max training epochs
 TOL_LOSS     = 5e-3    # stop when full-batch loss < TOL_LOSS
-N_POWER_ITER = 40      # power iterations for λ_max
+N_POWER_ITER = 40      # power iterations for lambda_max
 DATA_SEED    = 0
 
 # ── FashionMNIST ──────────────────────────────────────────────────────────────
@@ -88,9 +88,9 @@ y_tr_oh_cpu = y_tr_oh.cpu()    # one-hot on CPU for Hessian computations
 # ── VGG-type network ──────────────────────────────────────────────────────────
 class VGGSmall(nn.Module):
     """
-    Small VGG-type architecture for FashionMNIST (28×28 grayscale):
-      Conv(1→16) → ReLU → MaxPool → Conv(16→32) → ReLU → MaxPool
-      → Linear(1568→128) → ReLU → Linear(128→10)
+    Small VGG-type architecture for FashionMNIST (28x28 grayscale):
+      Conv(1→16) -> ReLU -> MaxPool -> Conv(16→32) -> ReLU -> MaxPool
+      -> Linear(1568→128) -> ReLU -> Linear(128→10)
     ~207 K parameters — small enough for efficient Hessian computation.
     """
     def __init__(self):
@@ -161,14 +161,14 @@ def compute_sharpness_and_nonuniformity(model, X, y, n_iter=40):
     """
     Returns (sharpness, nonuniformity) following E, Ma, Wojtowytsch, Wu (2020).
 
-    From the 1-D toy model f(x) = 1/(2n) Σᵢ aᵢ x², extended to multi-dimension:
+    From the 1-D toy model f(x) = 1/(2n) sum_i a_i x^2, extended to multi-dimension:
 
-      Sharpness      a  = (1/n) Σᵢ aᵢ  =  λ_max(∇²L)
+      Sharpness      a  = (1/n) sum_i a_i  =  lambda_max(nabla^2 L)
                          estimated via Rayleigh-quotient power iteration.
 
-      Non-uniformity s  = sqrt( (1/n) Σᵢ aᵢ² − a² )
+      Non-uniformity s  = sqrt( (1/n) sum_i a_i^2 - a^2 )
                          std of the per-sample curvatures
-                         aᵢ = vᵀ ∇²Lᵢ(θ) v
+                         a_i = v^T nabla^2 L_i(theta) v
                          where v is the leading eigenvector of ∇²L.
 
     Both computations run on CPU (create_graph=True is unreliable on MPS).
@@ -182,7 +182,7 @@ def compute_sharpness_and_nonuniformity(model, X, y, n_iter=40):
     n_p    = sum(p.numel() for p in params)
     n      = X.shape[0]
 
-    # ── Phase 1: power iteration → v and λ_max ────────────────────────────────
+    # ── Phase 1: power iteration -> v and lambda_max ────────────────────────────────
     vec = torch.randn(n_p)
     vec /= vec.norm()
     lam = 0.0
@@ -203,7 +203,7 @@ def compute_sharpness_and_nonuniformity(model, X, y, n_iter=40):
     sharpness = lam
     # vec is now the leading eigenvector (detached)
 
-    # ── Phase 2: per-sample curvatures aᵢ = vᵀ ∇²Lᵢ v ───────────────────────
+    # ── Phase 2: per-sample curvatures a_i = v^T nabla^2 L_i v ───────────────────────
     a_samples = []
     for i in range(n):
         model_cpu.zero_grad()
@@ -211,7 +211,7 @@ def compute_sharpness_and_nonuniformity(model, X, y, n_iter=40):
         grads_i = torch.autograd.grad(loss_i, params, create_graph=True)
         g_i     = torch.cat([g.reshape(-1) for g in grads_i])
 
-        # vᵀ g_i  →  d/dθ  →  vᵀ (∇²Lᵢ) v
+        # v^T g_i  ->  d/dθ  ->  v^T (nabla^2 L_i) v
         gv_i     = (g_i * vec).sum()
         Hv_i_tup = torch.autograd.grad(gv_i, params, retain_graph=False)
         Hv_i     = torch.cat([h.reshape(-1) for h in Hv_i_tup]).detach()
@@ -281,15 +281,15 @@ for batch_size, name, color, marker in configs:
                s=(120 if marker == '*' else 80),
                label=name, zorder=3, alpha=0.85)
 
-# Vertical line: GD stability threshold S = 2/η
+# Vertical line: GD stability threshold S = 2/nu
 stab = 2.0 / LR
 ax.axvline(stab, color='black', linewidth=1.5, zorder=4)
 ylim_top = ax.get_ylim()[1]
 ax.text(stab * 1.02, ylim_top * 0.97, r'$2/\eta$',
         fontsize=12, ha='left', va='top')
 
-# Dashed predicted bounds: U ≤ C · √B
-# Estimate C from the mean U / √B of each SGD configuration
+# Dashed predicted bounds: U <= C · sqrt(B)
+# Estimate C from the mean U / sqrt(B) of each SGD configuration
 C_estimates = []
 for batch_size, name, _, _ in configs:
     if batch_size is not None and results[name]['U']:

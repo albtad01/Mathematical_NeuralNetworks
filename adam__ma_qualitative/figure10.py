@@ -5,13 +5,13 @@ Three typical behavior patterns for Adam trajectories.
 
 Setup (from paper caption)
 --------------------------
-  Network : fully-connected, hidden layers  256 → 128 → 64, ReLU activations
+  Network : fully-connected, hidden layers  256 -> 128 -> 64, ReLU activations
   Data    : 2 classes of CIFAR-10 (airplane=0, automobile=1),
             1000 samples per class  (2000 total)
-  LR      : η = 0.001
-  Adam    : parameters reparametrised as  α = 1 − a·η,  β = 1 − b·η
-            where  α = PyTorch beta2 (second-moment / v decay)
-                   β = PyTorch beta1 (first-moment  / m decay)
+  LR      : nu = 0.001
+  Adam    : parameters reparametrised as  alpha = 1 - alpha·nu,  beta = 1 - b·nu
+            where  alpha = PyTorch beta2 (second-moment / v decay)
+                   beta = PyTorch beta1 (first-moment  / m decay)
 
 Loss function
 -------------
@@ -28,16 +28,16 @@ Batch size
 
 Regimes
 -------
-  Spike       a =   1, b = 100  →  betas = (β, α) = (0.900, 0.999)
-  Oscillation a =  10, b =  10  →  betas = (0.990, 0.990)
-  Divergence  a = 100, b =   1  →  betas = (0.999, 0.900)
+  Spike       a =   1, b = 100  ->  betas = (beta, alpha) = (0.900, 0.999)
+  Oscillation a =  10, b =  10  ->  betas = (0.990, 0.990)
+  Divergence  a = 100, b =   1  ->  betas = (0.999, 0.900)
 
-Figure layout: 2 rows × 3 columns  (log y-axis throughout)
-  Row 1 : full 0 – 1000-iteration loss curve
+Figure layout: 2 rows x 3 columns  (log y-axis throughout)
+  Row 1 : full 0 - 1000-iteration loss curve
   Row 2 : zoomed view
-            Spike:       iterations 400 – 800
-            Oscillation: iterations 800 – 1000
-            Divergence:  iterations 800 – 1000
+            Spike:       iterations 400 - 800
+            Oscillation: iterations 800 - 1000
+            Divergence:  iterations 800 - 1000
 """
 
 import numpy as np
@@ -59,7 +59,7 @@ print(f"Device: {DEVICE}")
 # ── hyperparameters ────────────────────────────────────────────────────────────
 LR          = 0.001
 N_ITERS     = 1000        # gradient steps  (paper Fig 10 uses 1000)
-N_PER_CLASS = 1000        # CIFAR-10 samples per class  (2 classes → 2000 total)
+N_PER_CLASS = 1000        # CIFAR-10 samples per class  (2 classes -> 2000 total)
 CLASSES     = [0, 1]      # airplane, automobile
 SEED        = 0
 
@@ -273,7 +273,7 @@ for col, (a, b, key, disp) in enumerate(REGIMES):
 
 #fig.suptitle(
 #    'Figure 10: Three typical Adam behavior patterns\n'
-#    r'FC(256, 128, 64) · CIFAR-10 two-class · $\eta=0.001$ · batch=64',
+#    'FC(256, 128, 64)  CIFAR-10 two-class  $\eta=0.001$  batch=64',
 #    fontsize=10, fontweight='bold')
 
 plt.tight_layout()

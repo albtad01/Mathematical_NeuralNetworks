@@ -3,7 +3,7 @@ Replication of Figure 11 from E, Ma, Wojtowytsch, Wu (2020).
 
 Three panels
 ------------
-  Left   : Adam training curve with default parameters (α=0.9, β=0.999),
+  Left   : Adam training curve with default parameters (alpha=0.9, beta=0.999),
             i.e. betas=(0.9, 0.999) → spike regime (a=1, b=100).
   Middle : Heat map of the average training loss (log₁₀) over the last 1 000
             of 1 500 Adam iterations, across a grid of (a, b) values.
@@ -12,20 +12,20 @@ Three panels
 
 Setup (Figure 11 caption)
 --------------------------
-  Network  : FC  3072 → 256 → 256 → 128 → 2,  ReLU activations
+  Network  : FC  3072 -> 256 -> 256 -> 128 -> 2,  ReLU activations
   Data     : 2 classes of CIFAR-10 (airplane=0, automobile=1),
              500 samples per class = 1 000 total
   LR       : η = 0.001
   Loss     : square (MSE) with one-hot targets
   Iters    : 1 500 total;  statistics over last 1 000
   Grid     : a, b ∈ [0.1, 100] log-spaced (N_GRID points each)
-             beta2 = 1 − a·η  (PyTorch betas[1], second-moment decay)
-             beta1 = 1 − b·η  (PyTorch betas[0], first-moment  decay)
+             beta2 = 1 - a·nu  (PyTorch betas[1], second-moment decay)
+             beta1 = 1 - b·nu  (PyTorch betas[0], first-moment  decay)
 
-Default for left panel: (α, β) = (0.9, 0.999) in standard DL convention:
-  alpha = beta1 = 0.9  →  b = (1 − 0.9 ) / η = 100
-  beta  = beta2 = 0.999 →  a = (1 − 0.999) / η =   1
-  → a=1, b=100: the spike regime from Figure 10.
+Default for left panel: (alpha, beta) = (0.9, 0.999) in standard DL convention:
+  alpha = beta1 = 0.9  ->  b = (1 - 0.9 ) / nu = 100
+  beta  = beta2 = 0.999 ->  a = (1 - 0.999) / nu =   1
+  -> a=1, b=100: the spike regime from Figure 10.
 """
 
 import numpy as np
@@ -64,7 +64,7 @@ A_VALS  = np.logspace(np.log10(0.1), np.log10(100), N_GRID)
 B_VALS  = np.logspace(np.log10(0.1), np.log10(100), N_GRID)
 
 # Default run for the left panel (spike regime)
-LEFT_A, LEFT_B = 1, 100    # → betas=(0.9, 0.999)
+LEFT_A, LEFT_B = 1, 100    # -> betas=(0.9, 0.999)
 
 # Classification thresholds
 LARGE_OSC_MEAN  = 0.12    # mean loss above this → large oscillation
@@ -107,7 +107,7 @@ print(f"Data: {X_t.shape}  |  class counts: {counts}")
 
 # ── network ────────────────────────────────────────────────────────────────────
 class FCNet(nn.Module):
-    """FC: 3072 → 256 → 256 → 128 → 2, ReLU activations."""
+    """FC: 3072 -> 256 -> 256 -> 128 -> 2, ReLU activations."""
     def __init__(self):
         super().__init__()
         self.net = nn.Sequential(
@@ -268,9 +268,9 @@ ax.grid(True, which='both', linestyle=':', linewidth=0.4, alpha=0.5, color='whit
 for sp in ax.spines.values():
     sp.set_linewidth(0)
 
-# ── Middle: log₁₀(mean loss) heat map ────────────────────────────────────────
+# ── Middle: log10(mean loss) heat map ────────────────────────────────────────
 ax    = axes[1]
-# Rows indexed by B_VALS (i=0 → smallest b), imshow row 0 is at top → flipud
+# Rows indexed by B_VALS (i=0 -> smallest b), imshow row 0 is at top → flipud
 log_m = np.log10(np.clip(mean_grid, 1e-8, None))
 im    = ax.imshow(np.flipud(log_m), aspect='auto',
                   cmap='inferno_r', vmin=-7, vmax=-1,
