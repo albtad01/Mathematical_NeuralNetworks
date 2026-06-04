@@ -9,16 +9,7 @@ Settings:  d=20,  eta=0.0005 (full) or 1e-3 (small),  stop when training loss < 
 Target:    f*(x) = ReLU(x_1),  x ~ Uniform([0,1]^20)
 Optimizer: full-batch GD (matching the paper)
 
-m range: log10(m) = 2.0 … 4.5  (paper range; m up to ~30 000)
-         Important: the phase boundary and dark low-error region only appear
-         at large m (log10(m) > 3), which is why the range must reach 4.5.
-
-MAX_ITER = 3_000_000 with stagnation detection:
-  - For LARGE m (NTK regime): converges in ~10 000 iterations → fast.
-  - For SMALL m (few params): needs many iterations; each step is cheap (small
-    matrices). Stagnation break exits if loss hasn't improved by 1% over 300K
-    consecutive iterations (handles cells where 10⁻⁷ is unreachable).
-  Manual gradients (no autograd graph) keep per-step overhead minimal.
+m range: log10(m) = 2.0 … 4.5  
 """
 
 import numpy as np
@@ -130,11 +121,9 @@ def train(n, m, d, lr, tol, max_iters, mf, seed, print_every):
             print(f"      [{label}] iter {it:7d}  loss={loss_val:.3e}", flush=True)
 
         # ── gradients ────────────────────────────────────────────────────────
-        # ∂L/∂f_i = r_i / n  →  ∂L/∂a = scale · Hᵀ (r/n)
         rn     = r / n
         grad_a = scale * (H.T @ rn)              # (m,)
 
-        # ∂L/∂B_j = (scale · a_j / n) Σ_i r_i 1[z_ij > 0] x_i
         ind    = (Z > 0).float()                 # (n, m)
         grad_B = (scale * a.unsqueeze(0)) * ind  # (n, m)  broadcast aⱼ
         grad_B = (rn.unsqueeze(1) * grad_B).T @ X_tr  # (m, d)
