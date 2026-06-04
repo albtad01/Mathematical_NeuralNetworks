@@ -13,7 +13,7 @@ Setup (Zhu et al. 2019, Section 5.3)
               = 1 200 training samples total
   Network : LeNet-like, ~11 244 parameters
               Conv2d(1->4, 5x5, pad=2) -> ReLU -> MaxPool(2)
-              → Linear(784->14) -> ReLU -> Linear(14->10)
+              -> Linear(784->14) -> ReLU -> Linear(14->10)
   Loss    : cross-entropy
   LR      : nu = 0.07  (same constant for both GD and SGD)
   GD iters: 3 000  (to reach theta*_GD near a global minimum)

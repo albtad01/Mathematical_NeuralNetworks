@@ -58,7 +58,7 @@ Y_te[np.arange(N_TE), y_te] = 1.0
 
 # ── seed search: find B whose κ puts Phase III inside [1, 10^12] ──────────────
 # Target: slowest-mode convergence time T_slow = K2  ≈  10^9
-# (i.e. log10(κ) ≈ 4.5,  so κ ≈ 30 000)
+# (i.e. log10(κ) ≈ 4.5,  so k ≈ 30 000)
 
 print("Searching for B seed with k2 ≈ 10^8 ...")
 TARGET_LOG_TSLOW = 8.0      # want T_slow ≈ 10^8  (Phase III visible ~10^8-10^10)

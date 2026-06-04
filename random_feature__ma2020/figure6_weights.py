@@ -34,7 +34,7 @@ X_te_raw = (X_te_raw - mu) / std
 
 # ── settings — identical seed / split as figure6.py ──────────────────────────
 
-N    = 500      # training samples  (= m  →  interpolation threshold)
+N    = 500      # training samples  (= m  ->  interpolation threshold)
 M    = 500      # neurons
 D    = 784
 SEED = 0
@@ -54,7 +54,7 @@ y_tr = y_all[tr_idx]
 X_te = X_te_raw[te_idx]
 y_te = y_te_all[te_idx]
 
-# One-hot labels (N × 10); we extract column CLASS below
+# One-hot labels (N x 10); we extract column CLASS below
 Y_tr = np.zeros((N, 10), dtype=np.float32)
 Y_tr[np.arange(N), y_tr] = 1.0
 y_cls = Y_tr[:, CLASS]   # (N,) binary labels for the chosen digit

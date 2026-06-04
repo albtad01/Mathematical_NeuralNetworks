@@ -125,7 +125,7 @@ for wi, m in enumerate(WIDTHS):
     UY = U.T @ Y_tr          # (r, 10)
     H_te_VtT = H_te @ Vt.T  # (N_TE, r)  ← precompute; used for all T
 
-    eta = 1.0 / (s[0]**2 + 1e-12)   # safe step: 1 / σ_max^2
+    eta = 1.0 / (s[0]**2 + 1e-12)   # safe step: 1 / sigma_max^2
 
     for T in T_VALUES:
         log_base = np.log(np.clip(1.0 - eta * s**2, 1e-300, 1.0 - 1e-15))
