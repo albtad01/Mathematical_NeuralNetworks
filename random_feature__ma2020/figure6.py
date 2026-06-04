@@ -10,10 +10,10 @@ Right: Test error vs m for GD solutions stopped at iterations T.
        Computed exactly via SVD spectral filter — no loop over T steps needed.
 
 Key equation (GD from 0, full-batch, step η, multiclass 10 outputs):
-  A_T  = V diag(filter_T(σ)) U^T Y
-  filter_T(σ) = [1 − (1 − η σ²)^T] / σ
-  → T → ∞: A_T → min-norm solution (pseudoinverse)
-  → small T: suppresses small singular values (early-stop regularisation)
+  A_T  = V diag(filter_T(omaga)) U^T Y
+  filter_T(omega) = [1 − (1 − η omega^2)^T] / omega
+  -> T -> inf: A_T → min-norm solution (pseudoinverse)
+  -> small T: suppresses small singular values (early-stop regularisation)
 """
 
 import numpy as np
@@ -128,7 +128,6 @@ for wi, m in enumerate(WIDTHS):
     eta = 1.0 / (s[0]**2 + 1e-12)   # safe step: 1 / σ_max^2
 
     for T in T_VALUES:
-        # filter_T(σ) = [1 − (1 − η σ²)^T] / σ,  computed in log-space
         log_base = np.log(np.clip(1.0 - eta * s**2, 1e-300, 1.0 - 1e-15))
         factor   = np.exp(np.float64(T) * log_base)       # (1-ησ²)^T
         filt     = (1.0 - factor) / s                     # (r,)
