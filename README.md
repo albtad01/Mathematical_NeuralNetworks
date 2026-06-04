@@ -71,7 +71,7 @@ This guarantee does not hold for conventional scaling.
 ## Two-layer NN, conventional — Ma, Quenching
 
 **Folder:** [`twolayer_conventional__ma_quenching/`](twolayer_conventional__ma_quenching/)  
-**Paper:** Ma, Wu – *The Quenching-Activation Behavior of the Gradient Descent Dynamics for Two-layer Neural Network Models* [`@maQuenchingActivationBehaviorGradient`](https://arxiv.org/pdf/2006.14450)
+**Paper:** Ma, Wu – *The Quenching-Activation Behavior of the Gradient Descent Dynamics for Two-layer Neural Network Models* [paper link](https://arxiv.org/pdf/2006.14450)
 
 ### Theory (§ 5.2)
 Conventional scaling:
@@ -94,7 +94,7 @@ $$f_m(x;\,a,B) = \sum_j a_j\,\sigma(b_j^T x), \qquad a_j(0)\sim\mathcal{N}(0,\be
 ## Adam — Ma, Qualitative Study
 
 **Folder:** [`adam__ma_qualitative/`](adam__ma_qualitative/)  
-**Paper:** Ma, Ying – *A Qualitative Study of the Dynamic Behavior of Adaptive Gradient Algorithms* [`@maQualitativeStudyDynamic`](https://proceedings.mlr.press/v145/ma22a/ma22a.pdf)
+**Paper:** Ma, Ying – *A Qualitative Study of the Dynamic Behavior of Adaptive Gradient Algorithms* [paper link](https://proceedings.mlr.press/v145/ma22a/ma22a.pdf)
 
 ### Theory (§ 5.6)
 Adam with learning rate η and parameters β₁ = 1 − b·η (first moment), β₂ = 1 − a·η (second moment) exhibits three regimes depending on the ratio a/b:
@@ -114,7 +114,7 @@ Adam with learning rate η and parameters β₁ = 1 − b·η (first moment), β
 ## GD vs SGD — Zhu et al. 2019
 
 **Folder:** [`gd_sgd__zhu2019/`](gd_sgd__zhu2019/)  
-**Paper:** Zhu, Wu, Yu, Wu, Ma – *The Anisotropic Noise in Stochastic Gradient Descent: Its Behavior of Escaping from Sharp Minima and Regularization Effects* (2019) [`@zhuAnisotropicNoiseStochastic2019`](https://arxiv.org/abs/1803.00195)
+**Paper:** Zhu, Wu, Yu, Wu, Ma – *The Anisotropic Noise in Stochastic Gradient Descent: Its Behavior of Escaping from Sharp Minima and Regularization Effects* (2019) [paper link](https://arxiv.org/abs/1803.00195)
 
 ### Theory (§ 5.5)
 Different optimisers select qualitatively different global minima.  
