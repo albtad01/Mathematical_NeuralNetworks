@@ -20,7 +20,7 @@ The mapping follows Section 5 of E et al. 2020, which studies convergence and ge
 ## Random feature model — Ma et al. 2020
 
 **Folder:** [`random_feature__ma2020/`](random_feature__ma2020/)  
-**Paper:** Ma, Wu – *Slow Deterioration of the Generalization Error of the Random Feature Model* (2020) `@maSlowDeteriorationGeneralization2020`
+**Paper:** Ma, Wu – *Slow Deterioration of the Generalization Error of the Random Feature Model* (2020) [paper](https://proceedings.mlr.press/v107/ma20a.html) 
 
 ### Theory (§ 5.4)
 The random feature model fixes the hidden weights **B** at initialisation and only trains the output weights **a** — linear regression on fixed random features.  
@@ -47,7 +47,7 @@ The double-descent spike occurs at the **interpolation threshold** m = n, where 
 ## Two-layer NN, mean-field — E et al. 2020
 
 **Folder:** [`twolayer_meanfield__e2020/`](twolayer_meanfield__e2020/)  
-**Paper:** E, Ma, Wojtowytsch, Wu – *Towards a Mathematical Understanding* (2020) `@eMathematicalUnderstandingNeural2020`
+**Paper:** E, Ma, Wojtowytsch, Wu – *Towards a Mathematical Understanding* (2020) [arXiv:2009.10713](http://arxiv.org/abs/2009.10713)
 
 ### Theory (§ 5.1)
 Mean-field scaling writes the network as
@@ -71,7 +71,7 @@ This guarantee does not hold for conventional scaling.
 ## Two-layer NN, conventional — Ma, Quenching
 
 **Folder:** [`twolayer_conventional__ma_quenching/`](twolayer_conventional__ma_quenching/)  
-**Paper:** Ma, Wu – *The Quenching-Activation Behavior of the Gradient Descent Dynamics for Two-layer Neural Network Models* `@maQuenchingActivationBehaviorGradient`
+**Paper:** Ma, Wu – *The Quenching-Activation Behavior of the Gradient Descent Dynamics for Two-layer Neural Network Models* [`@maQuenchingActivationBehaviorGradient`](https://arxiv.org/pdf/2006.14450)
 
 ### Theory (§ 5.2)
 Conventional scaling:
@@ -94,7 +94,7 @@ $$f_m(x;\,a,B) = \sum_j a_j\,\sigma(b_j^T x), \qquad a_j(0)\sim\mathcal{N}(0,\be
 ## Adam — Ma, Qualitative Study
 
 **Folder:** [`adam__ma_qualitative/`](adam__ma_qualitative/)  
-**Paper:** Ma, Ying – *A Qualitative Study of the Dynamic Behavior of Adaptive Gradient Algorithms* `@maQualitativeStudyDynamic`
+**Paper:** Ma, Ying – *A Qualitative Study of the Dynamic Behavior of Adaptive Gradient Algorithms* [`@maQualitativeStudyDynamic`](https://proceedings.mlr.press/v145/ma22a/ma22a.pdf)
 
 ### Theory (§ 5.6)
 Adam with learning rate η and parameters β₁ = 1 − b·η (first moment), β₂ = 1 − a·η (second moment) exhibits three regimes depending on the ratio a/b:
@@ -114,7 +114,7 @@ Adam with learning rate η and parameters β₁ = 1 − b·η (first moment), β
 ## GD vs SGD — Zhu et al. 2019
 
 **Folder:** [`gd_sgd__zhu2019/`](gd_sgd__zhu2019/)  
-**Paper:** Zhu, Wu, Yu, Wu, Ma – *The Anisotropic Noise in Stochastic Gradient Descent: Its Behavior of Escaping from Sharp Minima and Regularization Effects* (2019) `@zhuAnisotropicNoiseStochastic2019`
+**Paper:** Zhu, Wu, Yu, Wu, Ma – *The Anisotropic Noise in Stochastic Gradient Descent: Its Behavior of Escaping from Sharp Minima and Regularization Effects* (2019) [`@zhuAnisotropicNoiseStochastic2019`](https://arxiv.org/abs/1803.00195)
 
 ### Theory (§ 5.5)
 Different optimisers select qualitatively different global minima.  
