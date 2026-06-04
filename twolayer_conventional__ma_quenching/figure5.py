@@ -2,23 +2,23 @@
 Replication of Figure 5 from E, Ma, Wojtowytsch, Wu (2020).
 
 Two-panel plot:
-  Left  : log₁₀(test error) vs log₁₀(width m)  — nn, rf (analytical), rf (GD).
-  Right : Path norm          vs log₁₀(width m)  — nn model only.
+  Left  : log10(test error) vs log10(width m)  — nn, rf (analytical), rf (GD).
+  Right : Path norm          vs log10(width m)  — nn model only.
 
 Setup (Figure 5 caption)
 -------------------------
   n = 200,  d = 20,  learning rate η = 0.001.
-  GD stopped when training error < 10⁻⁸ (10⁻⁷ for float32 on GPU).
+  GD stopped when training error < 10^-8 
   Dashed lines at  m = n/(d+1)  (left)  and  m = n  (right).
   Mean ± std over N_SEEDS independent runs shown.
 
 Models
 ------
-  nn      : two-layer ReLU network  f(x) = Σⱼ aⱼ σ(bⱼᵀ x)
+  nn      : two-layer ReLU network  
             trained with full-batch GD on (a, B) jointly.
-  rf_ana  : random features — bⱼ fixed at init, aⱼ solved analytically
+  rf_ana  : random features — b fixed at init, a solved analytically
             (minimum-norm least squares via SVD).  ← paper's rf
-  rf_gd   : random features — bⱼ fixed at init, aⱼ trained with GD.
+  rf_gd   : random features — b fixed at init, a trained with GD.
             Converges to same solution as rf_ana (convex linear problem).
 
 Dashed lines
@@ -26,26 +26,12 @@ Dashed lines
   m = n/(d+1) ≈ 9.5  : nn interpolation threshold  (m·(d+1) = n parameters = data)
   m = n       = 200   : rf interpolation threshold  (m free params in a = n data)
 
-Path norm :  Σⱼ |aⱼ| · ‖bⱼ‖
-
 Data
 ----
   Teacher network (m* = 5 hidden units, fixed random weights).
-  x ~ N(0, Iₐ/d)  so  ‖x‖ ≈ 1 almost surely.
+  x ~ N(0, I/d) 
   Output normalised to std(y_train) = 1.
   n = 200 train,  N_TE = 2 000 test.
-
-Device priority: MPS (Apple) → CUDA → CPU.
-  MPS / CUDA : float32,  EFF_TOL = 1e-7
-  CPU        : float64,  EFF_TOL = 1e-8  (paper value)
-
-Why MAX_ITERS = 2_000_000
---------------------------
-  The paper runs GD until convergence (no iteration cap).  With lr = 0.001,
-  reaching training error 10⁻⁸ from ~0.5 requires exp(-lr·λ_min·t) < 2×10⁻⁸,
-  i.e. t > 16/(0.001·λ_min).  For small m (m ≈ 5, poorly conditioned NTK),
-  λ_min can be O(0.01), requiring ~1.6M steps.  With n = 200 (tiny), each step
-  takes microseconds on GPU, so 2M iterations per run is fast in absolute time.
 """
 
 import numpy as np
@@ -85,7 +71,7 @@ DATA_SEED = 0
 STAG_CHECK = 200_000     # check every N iters
 STAG_FRAC  = 0.01        # need at least 1% improvement to continue
 
-# Width sweep: log₁₀(m) from ~0.3 to ~3.6  (m ≈ 2 … 4000)
+# Width sweep:
 M_VALS = np.unique(
     np.round(np.logspace(np.log10(2), np.log10(4000), 22)).astype(int)
 )
@@ -103,7 +89,7 @@ rng_d  = np.random.default_rng(DATA_SEED)
 # x ~ N(0, I/d)  so  ‖x‖ ≈ 1  (each component has std 1/√d)
 X_np   = rng_d.normal(0, 1.0 / np.sqrt(D), (N + N_TE, D)).astype(np.float64)
 
-# Teacher: m*=5, bⱼ* ~ N(0, I/d),  aⱼ* ~ N(0,1)
+# Teacher: m*=5
 B_t    = rng_d.normal(0, 1.0 / np.sqrt(D), (5, D)).astype(np.float64)
 a_t    = rng_d.normal(0, 1.0, 5).astype(np.float64)
 y_np   = np.maximum(X_np @ B_t.T, 0.0) @ a_t   # (N+N_TE,)
@@ -183,7 +169,7 @@ def gd_rf(m: int, lr: float, tol: float, max_iters: int, seed: int):
 # ── neural-network GD (manual, no autograd) ────────────────────────────────────
 def gd_nn(m: int, lr: float, tol: float, max_iters: int, seed: int):
     """
-    Full-batch GD on  f(x) = Σⱼ aⱼ σ(bⱼᵀ x).
+    Full-batch GD on  f(x) 
     Gradients computed manually — avoids autograd overhead, GPU-friendly.
     Returns (test_error, path_norm, final_train_error).
 
