@@ -5,7 +5,7 @@ Rate of convergence of mean-field GD for Barron vs non-Barron target functions.
 
 Model (mean-field):   f_m(x) = (1/m) sum_j a_j sigma(w_j^T x)
 GD dynamics (eq.35):  du_j/dt = -m * grad_{u_j} I
-  → discrete update with step eta:
+  --> discrete update with step eta:
       a -= (eta/n) * H^T r
       B -= (eta/n) * (r[:,None] * mask * a[None,:]).T @ ... (see mf_gd_step)
 
@@ -33,7 +33,7 @@ print(f"Using device: {DEVICE}")
 M         = 2000      # neurons — needs to be >> d for dimension-independent Barron convergence
 N         = 1000      # training samples
 N_TEST    = 10_000    # test samples for population risk
-ETA       = 0.02      # smaller step → stable for d=250 (t_max = N_STEPS * ETA = 65)
+ETA       = 0.02      # smaller step  stable for d=250 (t_max = N_STEPS * ETA = 65)
 N_STEPS   = 3250      # 3250 * 0.02 = 65
 LOG_EVERY = 10        # record every 10 steps  (Δt = 0.2)
 SEED      = 0
@@ -49,7 +49,7 @@ def non_barron_target(X):
     """
     f*(x) = ReLU( (sum_k x_k - d/2) / sqrt(d) ).
     Centered so mean≈0; std≈1/sqrt(12) regardless of d.
-    Barron norm = ||1/sqrt(d)||_1 = sqrt(d)  →  grows with dimension.
+    Barron norm = ||1/sqrt(d)||_1 = sqrt(d)  ->  grows with dimension.
     """
     d = X.shape[1]
     return torch.relu((X.sum(dim=1) - d / 2.0) / d ** 0.5)
