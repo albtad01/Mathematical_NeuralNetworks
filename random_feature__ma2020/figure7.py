@@ -10,7 +10,7 @@ The key challenge: at m=n the Gram matrix K = H Hᵀ is nearly singular.
 Its condition number κ = σ_max/σ_min determines when the three phases appear:
   Phase I ends at T ≈ 1/(η σ_max²) = 1          (fastest mode converges)
   Phase III starts at T ≈ κ²                     (slowest mode converges)
-We search over seeds for B to find one where κ² ≈ 10^8-10^10, so all three
+We search over seeds for B to find one where K2 ≈ 10^8-10^10, so all three
 phases fit in [1, 10^12].  The spectral-filter method makes each T value
 essentially free to evaluate, so the seed search adds no meaningful cost.
 """
@@ -59,10 +59,10 @@ Y_tr[np.arange(N),    y_tr] = 1.0
 Y_te[np.arange(N_TE), y_te] = 1.0
 
 # ── seed search: find B whose κ puts Phase III inside [1, 10^12] ──────────────
-# Target: slowest-mode convergence time T_slow = κ²  ≈  10^9
+# Target: slowest-mode convergence time T_slow = K2  ≈  10^9
 # (i.e. log10(κ) ≈ 4.5,  so κ ≈ 30 000)
 
-print("Searching for B seed with κ² ≈ 10^8 ...")
+print("Searching for B seed with k2 ≈ 10^8 ...")
 TARGET_LOG_TSLOW = 8.0      # want T_slow ≈ 10^8  (Phase III visible ~10^8-10^10)
 
 best_seed, best_diff, best_kappa = 0, np.inf, 0.0
@@ -75,7 +75,7 @@ for seed in range(300):
     if s_s[-1] < 1e-12:
         continue                                    # rank-deficient, skip
     eta_s  = 1.0 / s_s[0] ** 2
-    T_slow = 1.0 / (eta_s * s_s[-1] ** 2)          # ≈ κ²
+    T_slow = 1.0 / (eta_s * s_s[-1] ** 2)          # approx K2
     diff   = abs(np.log10(T_slow) - TARGET_LOG_TSLOW)
     if diff < best_diff:
         best_diff, best_seed, best_kappa = diff, seed, s_s[0] / s_s[-1]
@@ -105,7 +105,7 @@ eta   = 1.0 / (s[0] ** 2 + 1e-12)
 kappa = s[0] / s[-1]
 print(f"σ_max={s[0]:.2f}  σ_min={s[-1]:.2e}  κ={kappa:.2e}")
 
-# ── min-norm reference (T → ∞) ────────────────────────────────────────────────
+# ── min-norm reference (T → inf) ────────────────────────────────────────────────
 
 A_mn     = Vt.T @ ((1.0 / s)[:, None] * UY)       # (M, 10)
 mn_train = 0.5 * np.mean(np.sum((H_tr @ A_mn - Y_tr)**2, axis=1))
