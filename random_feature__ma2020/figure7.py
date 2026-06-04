@@ -4,12 +4,10 @@ Replication of Figure 7 from E, Ma, Wojtowytsch, Wu (2020).
 GD training dynamics at the interpolation threshold m = n = 500 (MNIST).
 X-axis: number of GD iterations T  (log scale, 1 to 10^12)
 Left  Y-axis: train error, test error, min-norm solution error
-Right Y-axis: path norm Σ_j |a_j| ||b_j||,  min-norm path norm
+Right Y-axis: path norm sum_j |a_j| ||b_j||,  min-norm path norm
 
-The key challenge: at m=n the Gram matrix K = H Hᵀ is nearly singular.
-Its condition number κ = σ_max/σ_min determines when the three phases appear:
-  Phase I ends at T ≈ 1/(η σ_max²) = 1          (fastest mode converges)
-  Phase III starts at T ≈ κ²                     (slowest mode converges)
+The key challenge: at m=n the Gram matrix K = H H^T is nearly singular.
+
 We search over seeds for B to find one where K2 ≈ 10^8-10^10, so all three
 phases fit in [1, 10^12].  The spectral-filter method makes each T value
 essentially free to evaluate, so the seed search adds no meaningful cost.
